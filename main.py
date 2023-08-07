@@ -26,16 +26,14 @@ class ClearingManager:
         self.is_hard_dropped = False
         self.state = state
         self.progress_manager = state.progress_manager
+
+
     def _move_row_down_by(self, row, offset):
         if offset:
-            # print(f"self._move_row_down_by({row}, {offset})")
             for tile in self._tiles_from_row(row):
-                # print(f"{tile.position=}")
                 tile.position = (tile.position[0], row + offset)
-                # print(f"{tile.position=}")
 
     def clear_lines(self):
-        # for i in range(GameState.WORLD_HEIGHT):
         lines_below = 0
         lines_streak = 0
         lines = 0
@@ -49,8 +47,6 @@ class ClearingManager:
                 lines_streak = 0
                 self._move_row_down_by(i, lines_below)
 
-        # print(f"{lines=}")
-
         if lines == 1:
             self.progress_manager.add_score_lines("single")
         elif lines == 2:
@@ -62,13 +58,11 @@ class ClearingManager:
         else:
             self.progress_manager.end_combo()
 
-        # print(f"{self.progress_manager.score=} {self.progress_manager.level=} {self.progress_manager.lines=}")
 
     def _row_is_full(self, row):
         for col in range(self.state.WORLD_WIDTH):
             if not self.state.tile_exists((col, row)):
                 return False
-        # print(f"row {row} is full")
         return True
 
     def _tiles_from_row(self, row):
@@ -110,7 +104,6 @@ class Tile:
 
 def tiles_touch_ground(tiles):
     for tile in tiles:
-        # print(tile, end=" ")
         if tile.position[1] >= GameState.WORLD_HEIGHT - 1:
             return True
     return False
@@ -126,8 +119,7 @@ def tiles_touch_tile(tiles, state_tiles):
             ):
                 return True
     return False
-    # for tile in tiles:
-    #     if
+
 
 class Brick:
     """Represents active brick which player can control"""
@@ -376,11 +368,8 @@ class ProgressManager:
         self.combo_count = 0
         self.is_last_difficult = False
         self.levelup = False
-        # self.score_cap
 
     def add_score_lines(self, action):
-
-        # levelup = False
 
         if action == "tetris":
             self.score += 800 * self.level * (1.5 if self.is_last_difficult else 1)
@@ -415,7 +404,6 @@ class ProgressManager:
         if self.combo_count >= 2:
             self.score += 50 * self.level
 
-        # return levelup
 
     def end_combo(self):
         self.is_last_difficult = False
@@ -435,10 +423,6 @@ class GameState:
 
     def game_lost(self):
         for i in range(GameState.WORLD_WIDTH):
-            # print((
-            #     i,
-            #     GameState.WORLD_HEIGHT - GameState.VISIBLE_HEIGHT - 1
-            # ))
             if self.tile_exists((
                 i,
                 GameState.WORLD_HEIGHT - GameState.VISIBLE_HEIGHT - 1
@@ -463,7 +447,6 @@ class GameState:
         self.timer = 0
         self._lock_delay_epoch = 1
         self._move_epoch = 1
-        # self.is_moving = False
 
         self.respawn()
 
@@ -478,8 +461,6 @@ class GameState:
             self.respawn(self.held_brick_kind)
             self.held_brick_kind = tmp
             
-            # self.held_brick_kind = 
-            # self.held_brick_kind = BrickRandomizer.next_brick()
     def tile_exists(self, position):
         for tile in self.tiles:
             if tile.position == position and not tile.is_brick_tile:
@@ -572,6 +553,8 @@ class GameMode(abc.ABC):
     @abc.abstractmethod
     def draw(self):
         pass
+
+
 class PlayMode(GameMode):
     def __init__(self, ui):
         self.ui = ui
@@ -650,10 +633,8 @@ class PlayMode(GameMode):
             if not ghost_tile:
                 pygame.draw.rect(self.window, color[tile.kind], rect)
             else:
-                # pygame.draw.rect(self.window, (0, 0, 0), rect)
                 pygame.draw.rect(self.window, color[tile.kind], rect, width=2)
-                # rect.inflate(-4, -4)
-                # pygame.draw.rect(self.window, (255,255,255), rect)
+
 
         self.window.fill((255, 255, 255))
         for tile in self.game_state.brick.ghost.tiles:
@@ -828,7 +809,6 @@ class UserInterface:
         
         pygame.init()
         self.main_font = pygame.font.SysFont('liberationserif', 20)
-        # Game stateq
         self.game_state = GameState()
 
         # Window
