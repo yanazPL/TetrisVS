@@ -5,7 +5,7 @@ import pygame
 import random
 import copy
 
-class BrickRandomizer():
+class BrickRandomizer:
     def __init__(self):
         self.history = ['Z', 'S', 'Z', 'S']
         self.keys = list(Brick.tile_vectors.keys())
@@ -17,23 +17,6 @@ class BrickRandomizer():
         self.history.pop(0)
         self.history.append(brick)
         return brick
-
-# class BrickRandomizer:
-#     def __init__(self):
-#         self._refill()
-#         self.history = ['Z', 'Z', 'S',
-#             random.choice(Brick.tile_vectors.keys())
-#         ]
-#     # def _refill(self):
-#     #     self.bricks = list(Brick.tile_vectors.keys())
-#     #     random.shuffle(self.bricks)
-
-#     def next_brick(self):
-        
-
-        # if not self.bricks:
-        #     self._refill()
-        # return self.bricks.pop()
 
 
 class ClearingManager:
@@ -504,12 +487,7 @@ class GameState:
         return False
 
     def move_brick_down(self):
-        # SECONDS_IN_MIN = 60
-        # TODO_FPS = 60
-        # epoch_dividor = GameState.PLAYER_SPEED if self.brick.is_soft_dropped else self.game_speed
-        # epoch_dividor = TODO_FPS / self.game_speed
-        # brick = self.brick
-        # print(f"{self.brick.is_soft_dropped=}")
+
         SOFT_DROP_MULTIPLIER = 10
         self.timer += self.progress_manager.speed * (SOFT_DROP_MULTIPLIER if self.brick.is_soft_dropped else 1)
         if self.timer >= 1:
@@ -520,13 +498,6 @@ class GameState:
                 self.progress_manager.add_drop_score('soft', 1)
             self._lock_delay_epoch = 1
             self.timer -= 1
-        # if self.epoch >= epoch_dividor:
-        #     brick.move(
-        #         (brick.position[0], brick.position[1] + 1)
-        #     )
-        #     self._lock_delay_epoch = 1
-        #     self.epoch = 0
-        # self.epoch += 1
 
     def move_horizontaly(self):
         brick = self.brick
@@ -694,29 +665,7 @@ class PlayMode(GameMode):
         line_h = UserInterface.CELL_SIZE * (GameState.WORLD_HEIGHT - GameState.VISIBLE_HEIGHT)
         pygame.draw.line(self.window, (0, 0, 255), (0, line_h), (line_w, line_h), 2)
     
-"""
-class TextButton:
-    def __init__(self, font, x_pos, y_pos, text_input, color, bg_color, hover_color):
-        self.x_pos = x_pos
-        self.y_pos = y_pos
-        self.text_input = text_input
-        self.text = font.render(self.text_input, True, color)
-        self.hover_color = hover_color
-        self.bg_color = bg_color
-        self.color = color
-    def update(self, surface, pos):
-        self.text.blit(surface, dest=(self.x_pos, self.y_pos))
 
-    def check_input(self, position, action):
-        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-            action()
-
-    def change_color(self, position):
-        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-            self.text = UserInterface.MAIN_FONT.render(self.text_input, True, self.hover_color)
-        else:
-            self.text = UserInterface.MAIN_FONT.render(self.text_input, True, self.color)
-"""
 class Highscores:
     MAX_SCORES = 5
     PATH = 'scores'
@@ -795,22 +744,20 @@ class LostMode(GameMode):
         self.score_board = font.render(f"SCORE: {self.score}", True, 'black')
         self.level_board = font.render(f"LEVEL: {self.score}", True, 'black')
         self.lines_board = font.render(f"LEVEL: {self.level}", True, 'black')
-        # surface = self.score
+
         score_rect = self.score_board.get_rect(center=self.window.get_rect().center)
-        level_rect = self.score_board.get_rect(center=(100, 350))
-        lines_rect = self.score_board.get_rect(center=(100, 450))
-        # print(self.window.get_rect().center)
-        # level_rect = self.level_board.get_rect(center=)
+        level_rect = self.score_board.get_rect(center=(125, 350))
+        lines_rect = self.score_board.get_rect(center=(125, 450))
+
 
         self.window.fill((255, 255, 255))
         self.window.blit(self.score_board, score_rect)
         self.window.blit(self.level_board, level_rect)
         self.window.blit(self.lines_board, lines_rect)
-        # self.score_board.blit(self.window)
         
-        reset_btn = TextButton(font, 100, 100, "RESET", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
-        score_btn = TextButton(font, 100, 300, "HIGHSCORE", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
-        quit_btn = TextButton(font, 100, 500, "QUIT", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
+        reset_btn = TextButton(font, 125, 100, "RESET", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
+        score_btn = TextButton(font, 125, 300, "HIGHSCORE", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
+        quit_btn = TextButton(font, 125, 500, "QUIT", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
         self.buttons = [reset_btn, score_btn, quit_btn]
         reset_btn.bind_action(self.ui.reset)
         score_btn.bind_action(self.ui.show_highscore_screen)
@@ -829,8 +776,7 @@ class LostMode(GameMode):
     def draw(self):
         for button in self.buttons:
            button.update(self.window)
-        # for button in self.buttons:
-        #     button.draw()
+
     def update(self):
         pass
         
@@ -844,9 +790,9 @@ class HighscoreMode(GameMode):
         self.highscores = ui.game_state.highscores
         self.font = ui.main_font
 
-        reset_btn = TextButton(self.font, 100, 100, "RESET", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
+        reset_btn = TextButton(self.font, 125, 100, "RESET", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
         reset_btn.bind_action(self.ui.reset)
-        quit_btn = TextButton(self.font, 100, 500, "QUIT", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
+        quit_btn = TextButton(self.font, 125, 500, "QUIT", (255,0,255), (0, 255, 0), (243, 213,0), "pink")
         quit_btn.bind_action(self.ui.quit)
         self.buttons = [reset_btn, quit_btn]
         
