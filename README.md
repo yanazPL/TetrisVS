@@ -47,4 +47,4 @@ python main.py
 
 - Special thanks to the `pygame` community for the excellent documentation and support.
 - Inspired by the classic Tetris game
-- Shotouts to the https://tetris.wiki community
+- Shoutouts to the https://tetris.wiki community
