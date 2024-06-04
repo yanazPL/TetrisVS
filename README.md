@@ -30,7 +30,7 @@ cd TetrisVS
 
 To start the game, navigate to the project directory and run:
 ```
-python main.py
+python3 main.py
 ```
 
 ## Controls
